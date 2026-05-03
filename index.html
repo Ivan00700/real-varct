@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RealV — О проекте</title>
+  <title>RealV — Главная</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js" defer></script>
@@ -20,11 +20,11 @@
       <span class="logo-text">RealV</span>
     </a>
     <nav class="nav">
-      <a href="index.html" class="active">О проекте</a>
-      <a href="documentation.html">Документация</a>
-      <a href="implementation.html">Техническая реализация</a>
-      <a href="examples.html">Примеры программ</a>
-      <a href="extension.html">Расширение VS Code</a>
+      <a href="index.html" class="active">Главная</a>
+      <a href="documentation.html">Справочник</a>
+      <a href="examples.html">Примеры</a>
+      <a href="implementation.html">Устройство</a>
+      <a href="extension.html">Расширение</a>
     </nav>
   </div>
 </header>
@@ -35,92 +35,60 @@
   </div>
   <h1 class="hero-title">RealV</h1>
   <p class="hero-subtitle">Функциональный язык программирования с C-подобным синтаксисом, написанный на F#</p>
-  <div class="hero-cta">
-    <a href="documentation.html" class="btn-primary">Начать читать</a>
-    <a href="examples.html" class="btn-secondary">Примеры программ</a>
-  </div>
 </section>
 
 <main class="container">
 
   <section class="section">
-    <h2>О проекте</h2>
-    <p class="lead">
-      RealV — это кастомный функциональный язык программирования, разработанный в рамках курсового проекта
-      по дисциплине «Функциональное программирование». Интерпретатор полностью написан на <strong>F#</strong>
-      и работает поверх платформы .NET 8.
-    </p>
-    <p>
-      Главная цель — спроектировать язык с лаконичным и выразительным синтаксисом, основанным на идеях
-      лямбда-исчисления, но при этом обладающим привычным C-подобным синтаксисом блоков <code>{ ... }</code>.
-      Это делает RealV одновременно строгим с точки зрения функциональной семантики и удобным для повседневного написания кода.
-    </p>
-    <p>
-      Лексер и парсер написаны вручную (recursive descent) без сторонних комбинаторов — это даёт полный контроль над грамматикой
-      и позволяет генерировать понятные сообщения об ошибках.
-    </p>
-  </section>
-
-  <section class="section">
-    <h2>Возможности языка</h2>
-    <p>RealV — тьюринг-полный язык с богатым набором встроенных конструкций.</p>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <span class="icon">📦</span>
-        <h4>Переменные</h4>
-        <p>Локальные определения и присваивания через единый оператор <code>name = expr</code>.</p>
+    <h2>Команда</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-card-header">
+          <div class="team-avatar">РИ</div>
+          <div>
+            <div class="name">Разводов Иван</div>
+            <div class="group">М8О-203БВ-24</div>
+          </div>
+        </div>
+        <div class="role">Тимлид</div>
+        <ul class="team-contrib">
+          <li>Архитектура проекта и координация команды</li>
+          <li>Вся документация — структура, тексты, сайт</li>
+          <li>Расширение VS Code для файлов <code>.rv</code></li>
+          <li>Участие в разработке интерпретатора</li>
+        </ul>
       </div>
-      <div class="feature-card">
-        <span class="icon">λ</span>
-        <h4>Функции и лямбды</h4>
-        <p>Функции первого класса, анонимные лямбды <code>(x) =&gt; expr</code> и полноценные замыкания.</p>
+      <div class="team-card">
+        <div class="team-card-header">
+          <div class="team-avatar" style="background:#1f6b4a;">ДА</div>
+          <div>
+            <div class="name">Денисов Андрей</div>
+            <div class="group">М8О-203БВ-24</div>
+          </div>
+        </div>
+        <div class="role">Разработчик</div>
+        <ul class="team-contrib">
+          <li>Разработка ядра интерпретатора</li>
+          <li>Написание примеров программ на RealV</li>
+          <li>Тестирование возможностей языка</li>
+        </ul>
       </div>
-      <div class="feature-card">
-        <span class="icon">♻️</span>
-        <h4>Рекурсия</h4>
-        <p>Любая объявленная функция видит саму себя внутри своего тела без дополнительных ключевых слов.</p>
-      </div>
-      <div class="feature-card">
-        <span class="icon">💤</span>
-        <h4>Ленивые вычисления</h4>
-        <p>Отложенное выполнение через <code>delay</code> с мемоизацией результата при <code>force</code>.</p>
-      </div>
-      <div class="feature-card">
-        <span class="icon">🗂️</span>
-        <h4>Массивы</h4>
-        <p>Встроенные структуры данных: <code>head</code>, <code>tail</code>, <code>append</code>, <code>slice</code> и другие.</p>
-      </div>
-      <div class="feature-card">
-        <span class="icon">🔀</span>
-        <h4>Управляющие конструкции</h4>
-        <p>Тернарный оператор <code>cond ? a : b</code> и диапазонные циклы <code>start -&gt; end -&gt; (i) =&gt; body</code>.</p>
-      </div>
-      <div class="feature-card">
-        <span class="icon">⚡</span>
-        <h4>Обработка ошибок</h4>
-        <p>Оператор <code>! expr</code> останавливает программу с пользовательским сообщением об ошибке.</p>
-      </div>
-      <div class="feature-card">
-        <span class="icon">📂</span>
-        <h4>Файловый I/O</h4>
-        <p>Встроенные функции <code>readFile</code>, <code>writeFile</code>, <code>appendFile</code> для работы с файловой системой.</p>
+      <div class="team-card">
+        <div class="team-card-header">
+          <div class="team-avatar" style="background:#5a2d8a;">ПА</div>
+          <div>
+            <div class="name">Подгурский Александр</div>
+            <div class="group">М8О-203БВ-24</div>
+          </div>
+        </div>
+        <div class="role">Разработчик · QA</div>
+        <ul class="team-contrib">
+          <li>Разработка интерпретатора</li>
+          <li>Отладка и исправление ошибок</li>
+          <li>Проверка граничных случаев</li>
+        </ul>
       </div>
     </div>
-  </section>
-
-  <section class="section">
-    <h2>Быстрый старт</h2>
-    <p>Программы RealV хранятся в файлах с расширением <code>.rv</code>. Для запуска нужен .NET SDK. Сборка и запуск из корня репозитория:</p>
-    <pre><code class="language-bash">dotnet run --project src/RealV.Cli/RealV.Cli.fsproj -- путь/к/скрипту.rv</code></pre>
-    <div class="callout">
-      Первый запуск потребует скачивания зависимостей .NET. Последующие запуски работают мгновенно.
-    </div>
-    <p>Пример программы — рекурсивный факториал:</p>
-    <pre><code class="language-javascript">factorial(n) = {
-  n == 0 ? return 1 : return n * factorial(n - 1)
-}
-
-factorial(10)</code></pre>
   </section>
 
   <hr class="divider">
@@ -144,26 +112,159 @@ factorial(10)</code></pre>
     </p>
   </section>
 
+  <hr class="divider">
+
   <section class="section">
-    <h2>Команда</h2>
-    <div class="team-grid">
-      <div class="team-card">
-        <div class="name">Разводов Иван</div>
-        <div class="group">М8О-203БВ-24</div>
-        <div class="role">Тимлид · Документация · Расширение VS Code · Разработка</div>
+    <h2>О проекте</h2>
+    <p class="lead">
+      RealV — это кастомный функциональный язык программирования, разработанный в рамках курсового проекта
+      по дисциплине «Функциональное программирование». Интерпретатор полностью написан на <strong>F#</strong>
+      и работает поверх платформы .NET 8.
+    </p>
+    <p>
+      Главная цель — спроектировать язык с лаконичным и выразительным синтаксисом, основанным на идеях
+      лямбда-исчисления, но при этом обладающим привычным C-подобным синтаксисом блоков <code>{ ... }</code>.
+      Это делает RealV одновременно строгим с точки зрения функциональной семантики и удобным для повседневного написания кода.
+    </p>
+    <p>
+      Лексер и парсер написаны вручную (recursive descent) без сторонних комбинаторов — это даёт полный контроль над грамматикой
+      и позволяет генерировать понятные сообщения об ошибках.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Ключевые решения</h2>
+    <p>Три архитектурных выбора, которые определяют характер языка.</p>
+    <ul class="design-list">
+      <li>
+        <strong>Читаемый синтаксис — первый приоритет</strong>
+        <p>RealV использует фигурные блоки <code>{ ... }</code> и оператор <code>=</code> из C/JS. Функциональный подход не должен означать чуждый вид кода — поэтому синтаксис намеренно выглядит знакомо даже без знания теории ФП.</p>
+      </li>
+      <li>
+        <strong>Интерпретатор без внешних зависимостей</strong>
+        <p>Лексер и парсер написаны вручную методом рекурсивного спуска — без FParsec и других комбинаторов. Это даёт полный контроль над грамматикой и позволяет генерировать понятные, точные сообщения об ошибках.</p>
+      </li>
+      <li>
+        <strong>Функциональное ядро с допуском мутаций</strong>
+        <p>Под C-подобным синтаксисом — строгое лямбда-исчисление: замыкания, thunk'и, явная рекурсия через <code>LetRec</code>. При этом переменные можно переопределять через <code>=</code>, снижая порог вхождения.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Язык в действии</h2>
+    <p>Программы RealV хранятся в файлах с расширением <code>.rv</code>. Несколько характерных примеров:</p>
+    <pre><code class="language-javascript">// Рекурсивный факториал
+factorial(n) = {
+  n == 0 ? return 1 : return n * factorial(n - 1)
+}
+
+// Замыкания и функции высшего порядка
+makeAdder(x) = {
+  return (y) => x + y
+}
+add5 = makeAdder(5)
+add5(10) // 15
+
+// Ленивые вычисления
+lazyTask = delay(40 + 2)
+val = force(lazyTask) // вычисляется один раз, затем кэшируется</code></pre>
+    <p>Запуск: <code>dotnet run --project src/RealV.Cli/RealV.Cli.fsproj -- скрипт.rv</code></p>
+  </section>
+
+  <section class="section">
+    <h2>Возможности языка</h2>
+    <p>RealV — тьюринг-полный язык с богатым набором встроенных конструкций. Нажмите на любую возможность, чтобы увидеть пример кода.</p>
+    <div class="feature-list-2col">
+      <a class="feature-item" href="documentation.html#s4">
+        <div class="feature-icon-box">📦</div>
+        <div>
+          <h4>Переменные</h4>
+          <p>Локальные определения и присваивания через единый оператор <code>name = expr</code>.</p>
+          <span class="feature-item-hint">→ справочник</span>
+        </div>
+      </a>
+      <a class="feature-item" href="examples.html#ex-closures">
+        <div class="feature-icon-box">λ</div>
+        <div>
+          <h4>Функции и лямбды</h4>
+          <p>Функции первого класса, анонимные лямбды <code>(x) =&gt; expr</code> и полноценные замыкания.</p>
+          <span class="feature-item-hint">→ пример кода</span>
+        </div>
+      </a>
+      <a class="feature-item" href="examples.html#ex-recursion">
+        <div class="feature-icon-box">♻️</div>
+        <div>
+          <h4>Рекурсия</h4>
+          <p>Любая объявленная функция видит саму себя внутри своего тела без дополнительных ключевых слов.</p>
+          <span class="feature-item-hint">→ пример кода</span>
+        </div>
+      </a>
+      <a class="feature-item" href="examples.html#ex-lazy">
+        <div class="feature-icon-box">💤</div>
+        <div>
+          <h4>Ленивые вычисления</h4>
+          <p>Отложенное выполнение через <code>delay</code> с мемоизацией результата при <code>force</code>.</p>
+          <span class="feature-item-hint">→ пример кода</span>
+        </div>
+      </a>
+      <a class="feature-item" href="examples.html#ex-arrays">
+        <div class="feature-icon-box">🗂️</div>
+        <div>
+          <h4>Массивы</h4>
+          <p>Встроенные структуры данных: <code>head</code>, <code>tail</code>, <code>append</code>, <code>slice</code> и другие.</p>
+          <span class="feature-item-hint">→ пример кода</span>
+        </div>
+      </a>
+      <a class="feature-item" href="examples.html#ex-ternary">
+        <div class="feature-icon-box">🔀</div>
+        <div>
+          <h4>Управляющие конструкции</h4>
+          <p>Тернарный оператор <code>cond ? a : b</code> и диапазонные циклы <code>start -&gt; end -&gt; (i) =&gt; body</code>.</p>
+          <span class="feature-item-hint">→ пример кода</span>
+        </div>
+      </a>
+      <a class="feature-item" href="examples.html#ex-errors">
+        <div class="feature-icon-box">⚡</div>
+        <div>
+          <h4>Обработка ошибок</h4>
+          <p>Оператор <code>! expr</code> останавливает программу с пользовательским сообщением об ошибке.</p>
+          <span class="feature-item-hint">→ пример кода</span>
+        </div>
+      </a>
+      <a class="feature-item" href="examples.html#ex-io">
+        <div class="feature-icon-box">📂</div>
+        <div>
+          <h4>Файловый I/O</h4>
+          <p>Встроенные функции <code>readFile</code>, <code>writeFile</code>, <code>appendFile</code> для работы с файловой системой.</p>
+          <span class="feature-item-hint">→ пример кода</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Стек</h2>
+    <div class="tech-row">
+      <div class="tech-item">
+        <strong>F#</strong>
+        <span>Язык реализации интерпретатора</span>
       </div>
-      <div class="team-card">
-        <div class="name">Денисов Андрей</div>
-        <div class="group">М8О-203БВ-24</div>
-        <div class="role">Разработка · Примеры программ на языке</div>
+      <div class="tech-item">
+        <strong>.NET 8</strong>
+        <span>Платформа запуска и стандартная библиотека</span>
       </div>
-      <div class="team-card">
-        <div class="name">Подгурский Александр</div>
-        <div class="group">М8О-203БВ-24</div>
-        <div class="role">Разработка · Отладка · Исправление ошибок</div>
+      <div class="tech-item">
+        <strong>VS Code Extension API</strong>
+        <span>Подсветка синтаксиса и запуск .rv-файлов</span>
+      </div>
+      <div class="tech-item">
+        <strong>highlight.js</strong>
+        <span>Подсветка кода в документации</span>
       </div>
     </div>
   </section>
+
 
 </main>
 

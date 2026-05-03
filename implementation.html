@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RealV — Техническая реализация</title>
+  <title>RealV — Устройство</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js" defer></script>
@@ -20,11 +20,11 @@
       <span class="logo-text">RealV</span>
     </a>
     <nav class="nav">
-      <a href="index.html">О проекте</a>
-      <a href="documentation.html">Документация</a>
-      <a href="implementation.html" class="active">Техническая реализация</a>
-      <a href="examples.html">Примеры программ</a>
-      <a href="extension.html">Расширение VS Code</a>
+      <a href="index.html">Главная</a>
+      <a href="documentation.html">Справочник</a>
+      <a href="examples.html">Примеры</a>
+      <a href="implementation.html" class="active">Устройство</a>
+      <a href="extension.html">Расширение</a>
     </nav>
   </div>
 </header>
@@ -36,30 +36,11 @@
 
 <main class="container">
 
-  <div class="intro-card">
-    <p>
-      RealV реализован в виде кастомного интерпретатора на <strong>F#</strong> (.NET 8). Архитектура классическая
-      для функциональных интерпретаторов, но без сторонних комбинаторов — лексер и парсер написаны вручную
-      методом рекурсивного спуска. Это даёт полный контроль над синтаксисом и сообщениями об ошибках.
-    </p>
-  </div>
-
-  <section class="section">
-    <h2>Структура проекта</h2>
-    <table>
-      <thead>
-        <tr><th>Папка / Файл</th><th>Назначение</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>Core/Ast.fs</code></td><td>Определение узлов дерева (тип <code>Expr</code>)</td></tr>
-        <tr><td><code>Core/Tokens.fs</code></td><td>Определение лексем (тип <code>Token</code>)</td></tr>
-        <tr><td><code>Parser/Lexer.fs</code></td><td>Кастомный лексер: строка символов → список токенов</td></tr>
-        <tr><td><code>Parser/Parser.Expression.fs</code></td><td>Рекурсивный спуск: токены → <code>Expr</code> (AST)</td></tr>
-        <tr><td><code>Runtime/Eval.fs</code></td><td>Вычислитель: интерпретация <code>Expr</code> через <code>Value</code>, <code>Env</code>, <code>Thunk</code></td></tr>
-        <tr><td><code>RealV.Cli/Program.fs</code></td><td>Точка входа (CLI), чтение файлов и запуск интерпретатора</td></tr>
-      </tbody>
-    </table>
-  </section>
+  <p class="lead">
+    RealV реализован в виде кастомного интерпретатора на <strong>F#</strong> (.NET 8). Архитектура классическая
+    для функциональных интерпретаторов, но без сторонних комбинаторов — лексер и парсер написаны вручную
+    методом рекурсивного спуска. Это даёт полный контроль над синтаксисом и сообщениями об ошибках.
+  </p>
 
   <section class="section">
     <h2>Общая схема работы</h2>
@@ -226,6 +207,23 @@ force(x)         // разворачивается и падает с ошибк
       <code>length</code>, <code>head</code>, <code>tail</code>, <code>append</code>, <code>slice</code>,
       <code>readFile</code>, <code>writeFile</code>, <code>appendFile</code> и другими.
     </p>
+  </section>
+
+  <section class="section">
+    <h2>Структура проекта</h2>
+    <table>
+      <thead>
+        <tr><th>Папка / Файл</th><th>Назначение</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>Core/Ast.fs</code></td><td>Определение узлов дерева (тип <code>Expr</code>)</td></tr>
+        <tr><td><code>Core/Tokens.fs</code></td><td>Определение лексем (тип <code>Token</code>)</td></tr>
+        <tr><td><code>Parser/Lexer.fs</code></td><td>Кастомный лексер: строка символов → список токенов</td></tr>
+        <tr><td><code>Parser/Parser.Expression.fs</code></td><td>Рекурсивный спуск: токены → <code>Expr</code> (AST)</td></tr>
+        <tr><td><code>Runtime/Eval.fs</code></td><td>Вычислитель: интерпретация <code>Expr</code> через <code>Value</code>, <code>Env</code>, <code>Thunk</code></td></tr>
+        <tr><td><code>RealV.Cli/Program.fs</code></td><td>Точка входа (CLI), чтение файлов и запуск интерпретатора</td></tr>
+      </tbody>
+    </table>
   </section>
 
 </main>

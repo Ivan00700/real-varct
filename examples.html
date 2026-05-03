@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RealV — Примеры программ</title>
+  <title>RealV — Примеры</title>
   <link rel="stylesheet" href="assets/style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js" defer></script>
@@ -34,32 +34,31 @@
       <span class="logo-text">RealV</span>
     </a>
     <nav class="nav">
-      <a href="index.html">О проекте</a>
-      <a href="documentation.html">Документация</a>
-      <a href="implementation.html">Техническая реализация</a>
-      <a href="examples.html" class="active">Примеры программ</a>
-      <a href="extension.html">Расширение VS Code</a>
+      <a href="index.html">Главная</a>
+      <a href="documentation.html">Справочник</a>
+      <a href="examples.html" class="active">Примеры</a>
+      <a href="implementation.html">Устройство</a>
+      <a href="extension.html">Расширение</a>
     </nav>
   </div>
 </header>
 
 <div class="page-header">
-  <h1>Примеры программ</h1>
-  <p class="lead">Компактные примеры кода на RealV в сравнении с F# — для понимания того, как функциональные абстракции выражаются в C-подобном синтаксисе</p>
+  <h1>Примеры программ на RealV</h1>
+  <p class="lead">Компактные примеры кода — как функциональные абстракции выражаются в C-подобном синтаксисе</p>
 </div>
 
 <main class="container">
 
-  <div class="intro-card">
-    <p>
-      Все примеры и тесты находятся в директории <code>examples/</code> репозитория.
-      Каждый пример можно запустить через CLI интерпретатора:
-    </p>
-    <p><code>dotnet run --project src/RealV.Cli/RealV.Cli.fsproj -- examples/&lt;файл&gt;.rv</code></p>
+  <div class="callout">
+    Все примеры находятся в директории <code>examples/</code> репозитория и запускаются через CLI:
+    <code>dotnet run --project src/RealV.Cli/RealV.Cli.fsproj -- examples/&lt;файл&gt;.rv</code>
   </div>
 
+  <p class="example-category">Управление и операторы</p>
+
   <!-- 1 -->
-  <div class="compare-block">
+  <div class="compare-block" id="ex-ternary">
     <h2>1. Тернарный оператор</h2>
     <p>В RealV нет громоздкого <code>if/then/else</code>. Его заменяет компактный тернарный оператор <code>?:</code>, который напрямую разворачивается в AST-узел <code>If</code>.</p>
     <div class="compare-cols">
@@ -80,10 +79,10 @@ let result =
     </div>
   </div>
 
-  <hr class="divider">
+  <p class="example-category">Функции и рекурсия</p>
 
   <!-- 2 -->
-  <div class="compare-block">
+  <div class="compare-block" id="ex-recursion">
     <h2>2. Факториал и рекурсия</h2>
     <p>Классическая рекурсия поддерживается из коробки — любая объявленная функция видит саму себя внутри тела без дополнительных ключевых слов.</p>
     <div class="compare-cols">
@@ -109,7 +108,7 @@ factorial 5</code></pre>
   <hr class="divider">
 
   <!-- 3 -->
-  <div class="compare-block">
+  <div class="compare-block" id="ex-loop">
     <h2>3. Цикл через диапазоны (ArrowLoop)</h2>
     <p>Конструкция <code>start -&gt; end -&gt; (i) =&gt; body</code> реализует итерационный цикл. Тело — лямбда, что сохраняет функциональный стиль без потери читаемости.</p>
     <div class="compare-cols">
@@ -137,7 +136,7 @@ factorial(6) // 720</code></pre>
   <hr class="divider">
 
   <!-- 4 -->
-  <div class="compare-block">
+  <div class="compare-block" id="ex-closures">
     <h2>4. Лямбда-функции и замыкания</h2>
     <p>Функции первого класса: можно создавать анонимные функции и возвращать их как значения. Они запомнят своё лексическое окружение.</p>
     <div class="compare-cols">
@@ -163,10 +162,10 @@ add5 10 // 15</code></pre>
     </div>
   </div>
 
-  <hr class="divider">
+  <p class="example-category">Структуры данных</p>
 
   <!-- 5 -->
-  <div class="compare-block">
+  <div class="compare-block" id="ex-arrays">
     <h2>5. Массивы и списки</h2>
     <p>Массивы объявляются через <code>[...]</code>. Встроенное окружение предоставляет методы для их обработки в Lisp-стиле (голова / хвост) и функционального преобразования.</p>
     <div class="compare-cols">
@@ -196,7 +195,7 @@ let tail = List.tail lst2</code></pre>
   <hr class="divider">
 
   <!-- 6 -->
-  <div class="compare-block">
+  <div class="compare-block" id="ex-lazy">
     <h2>6. Ленивые вычисления (Delay / Force)</h2>
     <p>
       <code>delay</code> замораживает выражение в <code>Thunk</code>, не вычисляя его.
@@ -227,10 +226,10 @@ let val2 = lazyTask.Force() // из кэша</code></pre>
     </div>
   </div>
 
-  <hr class="divider">
+  <p class="example-category">Системные возможности</p>
 
   <!-- 7 -->
-  <div class="compare-block">
+  <div class="compare-block" id="ex-errors">
     <h2>7. Выброс исключений (Raise)</h2>
     <p>Оператор <code>!</code> прерывает выполнение с пользовательской ошибкой. Формально превращается в AST-узел <code>Raise</code>.</p>
     <div class="compare-cols">
@@ -253,7 +252,7 @@ failwith ошибка</code></pre>
   <hr class="divider">
 
   <!-- 8 -->
-  <div class="compare-block">
+  <div class="compare-block" id="ex-io">
     <h2>8. Файловый ввод-вывод</h2>
     <p>Встроенные функции <code>readFile</code>, <code>writeFile</code>, <code>appendFile</code> позволяют работать с файловой системой напрямую из кода на RealV.</p>
     <div class="compare-cols">
