@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RealV — Расширение VS Code</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js" defer></script>
+  <script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo-link">
+      <div class="logo-img-wrap">
+        <img src="photo_2026-05-03_13-50-16.jpg" alt="RealV" class="logo-img">
+      </div>
+      <span class="logo-text">RealV</span>
+    </a>
+    <nav class="nav">
+      <a href="index.html">О проекте</a>
+      <a href="documentation.html">Документация</a>
+      <a href="implementation.html">Техническая реализация</a>
+      <a href="examples.html">Примеры программ</a>
+      <a href="extension.html" class="active">Расширение VS Code</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <h1>Расширение для VS Code</h1>
+  <p class="lead">Подсветка синтаксиса, автодополнение скобок и быстрый запуск <code>.rv</code> программ прямо из редактора</p>
+</div>
+
+<main class="container">
+
+  <div class="intro-card">
+    <p>
+      Расширение создано для того, чтобы сделать процесс написания кода на RealV максимально комфортным.
+      Оно интегрируется напрямую в интерфейс VS Code, предоставляя привычный визуальный отклик
+      и базовые инструменты разработчика.
+    </p>
+  </div>
+
+  <section class="section">
+    <h2>Возможности</h2>
+    <ul class="feature-list">
+      <li>Подсветка синтаксиса для всех ключевых слов и встроенных функций языка RealV</li>
+      <li>Подсветка строк, чисел и однострочных комментариев (<code>// комментарий</code>)</li>
+      <li>Подсветка операторов: <code>=&gt;</code>, <code>-&gt;</code>, <code>?</code>, <code>:</code>, <code>!</code> и других</li>
+      <li>Автозакрытие скобок <code>( )</code>, <code>[ ]</code>, <code>{ }</code> и кавычек <code>" "</code></li>
+      <li>Кнопка ▶ («Run RealV Program») в правом верхнем углу редактора для быстрого запуска</li>
+      <li>Определение языка <strong>RealV</strong> для файлов с расширением <code>.rv</code></li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Структура расширения</h2>
+    <p>
+      Исходный код организован по стандартным рекомендациям платформы VS Code.
+      Главным файлом является манифест <code>package.json</code>, описывающий регистрацию языка.
+      Правила подсветки вынесены в TextMate-формат, логика запуска — в скрипт активации.
+    </p>
+    <pre><code class="language-plaintext">vscode-extension/
+├── package.json                    # манифест расширения
+├── language-configuration.json     # правила для скобок, комментариев, отступов
+├── extension.js                    # код активации и команда запуска
+└── syntaxes/
+    └── realv.tmLanguage.json       # грамматика TextMate для подсветки синтаксиса</code></pre>
+  </section>
+
+  <section class="section">
+    <h2>Поддерживаемые элементы синтаксиса</h2>
+    <p>
+      Модуль использует регулярные выражения TextMate для точного распознавания конструкций языка.
+      Цвета ключевых слов и операторов автоматически подстраиваются под текущую тему VS Code.
+    </p>
+
+    <div class="keyword-group">
+      <strong>Управление и константы</strong>
+      <code>return</code> <code>delay</code> <code>force</code> <code>true</code> <code>false</code>
+    </div>
+
+    <div class="keyword-group">
+      <strong>Массивы и коллекции</strong>
+      <code>length</code> <code>head</code> <code>tail</code> <code>append</code>
+      <code>remove</code> <code>contains</code> <code>slice</code> <code>get</code>
+    </div>
+
+    <div class="keyword-group">
+      <strong>Файловый I/O</strong>
+      <code>readFile</code> <code>writeFile</code> <code>appendFile</code>
+    </div>
+
+    <div class="keyword-group">
+      <strong>Операторы</strong>
+      <code>=&gt;</code> <code>-&gt;</code> <code>?</code> <code>:</code> <code>!</code>
+      <code>==</code> <code>&lt;</code> <code>&gt;</code> <code>+</code> <code>-</code>
+      <code>*</code> <code>/</code> <code>=</code>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Запуск в режиме разработки</h2>
+    <p>
+      Если вы хотите внести изменения в расширение — добавить ключевые слова, изменить правила автоотступов
+      или улучшить команду запуска — используйте встроенный механизм отладки VS Code.
+      Это позволит тестировать изменения в изолированном окружении, не затрагивая основной редактор.
+    </p>
+    <div class="steps">
+      <ol>
+        <li>
+          <div>
+            Откройте папку <code>vscode-extension/</code> в VS Code:
+            <pre><code class="language-bash">code путь/к/проекту/vscode-extension</code></pre>
+          </div>
+        </li>
+        <li>
+          <div>
+            Нажмите <strong>F5</strong> (или <strong>Run → Start Debugging</strong>).
+          </div>
+        </li>
+        <li>
+          <div>
+            Откроется новое окно VS Code с активным расширением — оно называется
+            <strong>[Extension Development Host]</strong>.
+          </div>
+        </li>
+        <li>
+          <div>
+            Откройте любой файл <code>.rv</code> (например, <code>examples/closures.rv</code>) и убедитесь:
+            <ul>
+              <li>ключевые слова и операторы подсвечиваются;</li>
+              <li>в правом нижнем углу отображается язык <strong>RealV</strong>;</li>
+              <li>на верхней панели видна кнопка запуска ▶.</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Постоянная установка</h2>
+    <p>Для повседневной работы удобнее установить расширение в основной редактор. Два варианта:</p>
+
+    <div class="install-block">
+      <h4>Способ 1 — скопировать в папку расширений</h4>
+      <p>Скопируйте папку <code>vscode-extension</code> в:</p>
+      <ul>
+        <li><strong>Windows:</strong> <code>%USERPROFILE%\.vscode\extensions\realv-0.1.0</code></li>
+        <li><strong>Linux / macOS:</strong> <code>~/.vscode/extensions/realv-0.1.0</code></li>
+      </ul>
+      <p style="margin-top: 12px;">Перезапустите VS Code.</p>
+    </div>
+
+    <div class="install-block">
+      <h4>Способ 2 — упаковать в .vsix</h4>
+      <pre><code class="language-bash"># Установите упаковщик, если его ещё нет
+npm install -g @vscode/vsce
+
+# В папке vscode-extension/ выполните:
+vsce package</code></pre>
+      <p>Получите файл <code>realv-0.1.0.vsix</code> и установите его:</p>
+      <pre><code class="language-bash">code --install-extension realv-0.1.0.vsix</code></pre>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Команда запуска</h2>
+    <p>
+      Расширение регистрирует команду <strong>Run RealV Program</strong>, которая запускает
+      текущий <code>.rv</code>-файл через интерпретатор, используя CLI проекта.
+      Больше не нужно каждый раз переключаться в терминал и прописывать путь вручную.
+    </p>
+    <ul>
+      <li>Кнопка ▶ в панели заголовка редактора при открытом <code>.rv</code>-файле.</li>
+      <li>Через палитру команд: <code>Ctrl+Shift+P</code> → <strong>Run RealV Program</strong>.</li>
+    </ul>
+    <div class="callout">
+      Убедитесь, что в настройках расширения указан корректный путь до проекта RealV.Cli,
+      иначе команда запуска не сможет найти интерпретатор.
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>RealV — курсовой проект по функциональному программированию · М8О-203БВ-24</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RealV — Техническая реализация</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js" defer></script>
+  <script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo-link">
+      <div class="logo-img-wrap">
+        <img src="photo_2026-05-03_13-50-16.jpg" alt="RealV" class="logo-img">
+      </div>
+      <span class="logo-text">RealV</span>
+    </a>
+    <nav class="nav">
+      <a href="index.html">О проекте</a>
+      <a href="documentation.html">Документация</a>
+      <a href="implementation.html" class="active">Техническая реализация</a>
+      <a href="examples.html">Примеры программ</a>
+      <a href="extension.html">Расширение VS Code</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <h1>Техническая реализация</h1>
+  <p class="lead">Как устроен интерпретатор RealV изнутри: лексер, парсер, AST, вычислитель и система ленивых вычислений</p>
+</div>
+
+<main class="container">
+
+  <div class="intro-card">
+    <p>
+      RealV реализован в виде кастомного интерпретатора на <strong>F#</strong> (.NET 8). Архитектура классическая
+      для функциональных интерпретаторов, но без сторонних комбинаторов — лексер и парсер написаны вручную
+      методом рекурсивного спуска. Это даёт полный контроль над синтаксисом и сообщениями об ошибках.
+    </p>
+  </div>
+
+  <section class="section">
+    <h2>Структура проекта</h2>
+    <table>
+      <thead>
+        <tr><th>Папка / Файл</th><th>Назначение</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>Core/Ast.fs</code></td><td>Определение узлов дерева (тип <code>Expr</code>)</td></tr>
+        <tr><td><code>Core/Tokens.fs</code></td><td>Определение лексем (тип <code>Token</code>)</td></tr>
+        <tr><td><code>Parser/Lexer.fs</code></td><td>Кастомный лексер: строка символов → список токенов</td></tr>
+        <tr><td><code>Parser/Parser.Expression.fs</code></td><td>Рекурсивный спуск: токены → <code>Expr</code> (AST)</td></tr>
+        <tr><td><code>Runtime/Eval.fs</code></td><td>Вычислитель: интерпретация <code>Expr</code> через <code>Value</code>, <code>Env</code>, <code>Thunk</code></td></tr>
+        <tr><td><code>RealV.Cli/Program.fs</code></td><td>Точка входа (CLI), чтение файлов и запуск интерпретатора</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>Общая схема работы</h2>
+    <div class="pipeline">┌──────────────┐    ┌─────────────┐    ┌────────────────────┐    ┌──────────────────┐
+│ Исходный код │ →  │  Lexer.fs   │ →  │ Parser.Expr.fs     │ →  │     Eval.fs      │
+│  (.rv файл)  │    │  (Tokens)   │    │  AST (Expr)        │    │  дерево + Env    │
+└──────────────┘    └─────────────┘    └────────────────────┘    └──────────────────┘
+                                                                          │
+                                                                          ▼
+                                                                 ┌──────────────────┐
+                                                                 │   Program.fs     │
+                                                                 │  вывод в консоль │
+                                                                 └──────────────────┘</div>
+    <ol>
+      <li><code>Program.fs</code> читает файл <code>.rv</code> и передаёт строку в интерпретатор.</li>
+      <li><code>Lexer.tokenize</code> проходит по строке посимвольно и возвращает список токенов.</li>
+      <li><code>Parser.Expression.parse</code> строит AST методом рекурсивного спуска.</li>
+      <li><code>Eval.evaluate</code> запускает корневой узел AST в глобальном окружении <code>Env</code>.</li>
+      <li>Результат последней инструкции (или явный <code>return</code>) выводится в консоль.</li>
+    </ol>
+  </section>
+
+  <section class="section">
+    <h2>AST — модуль Ast.fs</h2>
+    <p>
+      Грамматика языка описана в виде алгебраического типа данных (Discriminated Union) <code>Expr</code>.
+      Каждый узел дерева соответствует конкретной синтаксической конструкции:
+    </p>
+    <h3>Базовые типы и литералы</h3>
+    <pre><code class="language-fsharp">| Number of int
+| Bool   of bool
+| String of string
+| List   of Expr list</code></pre>
+    <h3>Переменные и ветвления</h3>
+    <pre><code class="language-fsharp">| Var of string
+| If  of Expr * Expr * Expr     // условие ? true : false
+| Seq of Expr list              // блок инструкций { ... }</code></pre>
+    <h3>Связывание и функции</h3>
+    <pre><code class="language-fsharp">| Lambda  of string * Expr                      // (x) => expr
+| App     of Expr * Expr                        // f(x)
+| Let     of string * Expr * Expr               // первое объявление
+| LetRec  of string * string * Expr * Expr      // рекурсивное объявление
+| Set     of string * Expr                      // мутация переменной</code></pre>
+    <h3>Особые конструкции RealV</h3>
+    <pre><code class="language-fsharp">| Raise     of Expr           // выброс исключения (! expr)
+| ArrowLoop of Expr * Expr    // start -> end -> (...)
+| Delay     of Expr           // ленивое создание (delay)
+| Force     of Expr           // ленивое вычисление (force)</code></pre>
+  </section>
+
+  <section class="section">
+    <h2>Лексер и парсер</h2>
+    <p>
+      В отличие от инструментов вроде FParsec, RealV использует <strong>ручной посимвольный лексер</strong>
+      и <strong>ручной парсер методом рекурсивного спуска</strong> — без внешних зависимостей.
+    </p>
+    <h3>Лексер</h3>
+    <ul>
+      <li>Хранит позицию в строке, самостоятельно собирает идентификаторы, числа и строки.</li>
+      <li>Поддерживает escape-последовательности <code>\n</code>, <code>\t</code> внутри строковых литералов.</li>
+      <li>Пропускает однострочные <code>//</code> комментарии и пробельные символы.</li>
+    </ul>
+    <h3>Парсер</h3>
+    <ul>
+      <li>Читает токены слева направо с lookahead-проверками для разрешения конфликтов.</li>
+      <li>Отличает объявление переменной от мутации — отслеживает, какие имена встретились впервые в блоке.</li>
+      <li>Синтаксис блоков <code>{ a; b; c }</code> собирается в узел <code>Seq[a, b, c]</code>.</li>
+      <li>Тернарный оператор <code>?:</code> напрямую разворачивается в <code>If(_, _, _)</code>.</li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Вычислитель — Eval.fs</h2>
+    <p>
+      <code>Eval.fs</code> рекурсивно обходит AST, преобразуя <code>Expr</code> в <code>Value</code>.
+      Система типов значений:
+    </p>
+    <pre><code class="language-fsharp">type Value =
+    | VNumber  of int
+    | VBool    of bool
+    | VUnit
+    | VString  of string
+    | VList    of Value list
+    | VClosure of string * Expr * Env   // пользовательская функция
+    | VPrim    of (Value -> Value)      // встроенная функция среды
+    | VThunk   of Thunk                 // отложенное вычисление</code></pre>
+    <p>
+      RealV допускает локальную мутабельность и сайд-эффекты (файловый I/O) — в этом его
+      принципиальное отличие от чисто функциональных языков.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Окружение и мутабельность (Env)</h2>
+    <p>
+      Окружение исполнения (<code>Env</code>) реализовано поверх изменяемого .NET словаря
+      <code>Dictionary&lt;string, Value&gt;</code> с цепочкой родительских окружений:
+    </p>
+    <pre><code class="language-fsharp">and Env(parent: Env option) =
+    let store = Dictionary&lt;string, Value&gt;()</code></pre>
+    <ul>
+      <li><strong>Get</strong> — ищет по локальному словарю, затем поднимается к <code>parent</code>.</li>
+      <li><strong>Define</strong> — добавляет переменную в текущий блок (узел <code>Let</code>).</li>
+      <li><strong>Set</strong> — перезаписывает существующую переменную в текущей или родительской области видимости.</li>
+    </ul>
+    <div class="callout">
+      Такое устройство позволяет языку вести себя привычно для программистов из C/JS:
+      значения можно переназначать через <code>=</code> после инициализации.
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Функции, замыкания и рекурсия</h2>
+    <p>
+      Именованные функции и рекурсия разворачиваются во время парсинга в абстракцию
+      <code>LetRec(name, arg, body, ...)</code>. В <code>Eval</code> имя связывается
+      с фиктивным замыканием до вычисления тела, что решает проблему самоссылки.
+    </p>
+    <p>
+      <code>VClosure(argName, bodyExpr, env)</code> «запоминает» ссылку на тот <code>Env</code>,
+      в котором функция была создана — это обеспечивает полноценную работу <strong>лексических замыканий</strong>.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Ленивые вычисления (Thunks)</h2>
+    <p>Отложенные вычисления с кэшированием управляются типом <code>Thunk</code>:</p>
+    <pre><code class="language-fsharp">and Thunk = { mutable Cell: Value option; Compute: unit -> Value }</code></pre>
+    <ul>
+      <li><code>delay(expr)</code> оборачивает выражение в <code>Thunk</code> с <code>Cell = None</code>.</li>
+      <li>При <code>force(thunk)</code> с <code>Cell = None</code> вызывается <code>Compute()</code>, результат кладётся в <code>Cell = Some(val)</code>.</li>
+      <li>При повторном <code>force</code> — мгновенно возвращается кэшированное значение.</li>
+    </ul>
+    <pre><code class="language-javascript">x = delay(!123)  // не упадёт
+force(x)         // разворачивается и падает с ошибкой</code></pre>
+  </section>
+
+  <section class="section">
+    <h2>Циклы и диапазоны (ArrowLoop)</h2>
+    <p>
+      Конструкция <code>val1 -&gt; val2 -&gt; (i) =&gt; body</code> под капотом вычисляет
+      стартовое и конечное значения, затем в цикле <code>while</code> вызывает правую лямбду,
+      передавая текущий индекс. Это позволяет писать короткие и понятные итераторы
+      без явной рекурсии — идеально вписывается в C-подобный синтаксис поверх ФП-ядра.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Сборка и точка входа</h2>
+    <p>Проект организован в две папки исходного кода: библиотека <code>RealV</code> и CLI <code>RealV.Cli</code>.</p>
+    <p>Файл проекта <code>src/RealV.Cli/RealV.Cli.fsproj</code> подключает ядро по порядку зависимостей:</p>
+    <pre><code class="language-xml">&lt;ItemGroup&gt;
+  &lt;Compile Include="..\RealV\Core\Ast.fs" /&gt;
+  &lt;Compile Include="..\RealV\Core\Tokens.fs" /&gt;
+  &lt;Compile Include="..\RealV\Parser\Lexer.fs" /&gt;
+  &lt;Compile Include="..\RealV\Parser\Parser.Expression.fs" /&gt;
+  &lt;Compile Include="..\RealV\Runtime\Eval.fs" /&gt;
+  &lt;Compile Include="Program.fs" /&gt;
+&lt;/ItemGroup&gt;</code></pre>
+    <p>Запуск:</p>
+    <pre><code class="language-bash">dotnet run --project src/RealV.Cli/RealV.Cli.fsproj -- examples/factorial.rv</code></pre>
+    <p>
+      При старте инициализируется глобальное окружение со встроенными <code>VPrim</code>-функциями:
+      <code>length</code>, <code>head</code>, <code>tail</code>, <code>append</code>, <code>slice</code>,
+      <code>readFile</code>, <code>writeFile</code>, <code>appendFile</code> и другими.
+    </p>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>RealV — курсовой проект по функциональному программированию · М8О-203БВ-24</p>
+</footer>
+
+</body>
+</html>

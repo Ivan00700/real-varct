@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RealV — Документация</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js" defer></script>
+  <script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo-link">
+      <div class="logo-img-wrap">
+        <img src="photo_2026-05-03_13-50-16.jpg" alt="RealV" class="logo-img">
+      </div>
+      <span class="logo-text">RealV</span>
+    </a>
+    <nav class="nav">
+      <a href="index.html">О проекте</a>
+      <a href="documentation.html" class="active">Документация</a>
+      <a href="implementation.html">Техническая реализация</a>
+      <a href="examples.html">Примеры программ</a>
+      <a href="extension.html">Расширение VS Code</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-header">
+  <h1>Документация языка RealV</h1>
+  <p class="lead">Полное описание синтаксиса и возможностей — от литералов до ленивых вычислений и файлового I/O</p>
+</div>
+
+<main class="container">
+
+  <div class="intro-card">
+    <p>
+      RealV — функциональный язык с читаемым brace-based синтаксисом, напоминающим C и JavaScript.
+      Под капотом он использует AST на основе лямбда-исчисления, поддерживает рекурсию, замыкания,
+      ленивые вычисления и встроенный файловый I/O. Файлы программ имеют расширение <code>.rv</code>.
+    </p>
+  </div>
+
+  <nav class="toc">
+    <p class="toc-label">Содержание</p>
+    <ol>
+      <li><a href="#s1">Структура программы</a></li>
+      <li><a href="#s2">Комментарии</a></li>
+      <li><a href="#s3">Базовые типы и литералы</a></li>
+      <li><a href="#s4">Переменные и присваивание</a></li>
+      <li><a href="#s5">Объявление функций и рекурсия</a></li>
+      <li><a href="#s6">Лямбда-функции и замыкания</a></li>
+      <li><a href="#s7">Условные выражения</a></li>
+      <li><a href="#s8">Обработка ошибок</a></li>
+      <li><a href="#s9">Массивы и встроенные операции</a></li>
+      <li><a href="#s10">Цикл и диапазоны</a></li>
+      <li><a href="#s11">Ленивые вычисления</a></li>
+      <li><a href="#s12">Файловый ввод-вывод</a></li>
+      <li><a href="#s13">Запуск программ</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="section" id="s1">
+    <h2>1. Структура программы</h2>
+    <p>
+      Программа на RealV состоит из инструкций. Основная структурная единица — блок <code>{ ... }</code>.
+      Выражения внутри блока разделяются переносом строки. Блок возвращает значение последнего вычисленного
+      выражения или то, что передано через <code>return</code>.
+    </p>
+    <pre><code class="language-javascript">{
+  x = 10
+  y = 20
+  return x + y
+}</code></pre>
+  </section>
+
+  <!-- 2 -->
+  <section class="section" id="s2">
+    <h2>2. Комментарии</h2>
+    <p>RealV поддерживает однострочные комментарии, начинающиеся с <code>//</code>:</p>
+    <pre><code class="language-javascript">// Это комментарий
+x = 5 // переменная x равна 5</code></pre>
+  </section>
+
+  <!-- 3 -->
+  <section class="section" id="s3">
+    <h2>3. Базовые типы и литералы</h2>
+    <table>
+      <thead>
+        <tr><th>Тип</th><th>Формат / Литерал</th><th>Пример</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Целые числа</strong></td><td>числа без точки</td><td><code>0</code>, <code>42</code>, <code>-7</code></td></tr>
+        <tr><td><strong>Логический</strong></td><td><code>true</code>, <code>false</code></td><td><code>true</code></td></tr>
+        <tr><td><strong>Строки</strong></td><td>текст в двойных кавычках</td><td><code>"Привет!"</code></td></tr>
+        <tr><td><strong>Массивы</strong></td><td>квадратные скобки <code>[...]</code></td><td><code>[1, 2, 3]</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 4 -->
+  <section class="section" id="s4">
+    <h2>4. Переменные и присваивание</h2>
+    <p>
+      Конструкция <code>имя = выражение</code> используется и для объявления, и для изменения значения.
+      При первом появлении имени в блоке это объявление, при последующих — мутация.
+    </p>
+    <pre><code class="language-javascript">{
+  x = 10      // объявление
+  x = x + 5   // присваивание нового значения
+  return x     // вернёт 15
+}</code></pre>
+  </section>
+
+  <!-- 5 -->
+  <section class="section" id="s5">
+    <h2>5. Объявление функций и рекурсия</h2>
+    <p>
+      Функции объявляются по шаблону <code>имя(аргумент) = тело</code>. Все функции унарны
+      (принимают один аргумент). Тело может быть выражением или блоком <code>{ ... }</code>.
+      Рекурсия поддерживается неявно — функция «видит» себя внутри своего тела.
+    </p>
+    <pre><code class="language-javascript">factorial(n) = {
+  n == 0 ? return 1 : return n * factorial(n - 1)
+}
+
+factorial(5) // 120</code></pre>
+    <p>Вызов функции использует круглые скобки: <code>factorial(5)</code> или <code>factorial (5)</code>.</p>
+  </section>
+
+  <!-- 6 -->
+  <section class="section" id="s6">
+    <h2>6. Лямбда-функции и замыкания</h2>
+    <p>Анонимные функции создаются стрелочным синтаксисом <code>=&gt;</code>:</p>
+    <pre><code class="language-javascript">(x) => выражение
+(x) => { ... }</code></pre>
+    <p>Лямбды запоминают лексическое окружение (замыкания):</p>
+    <pre><code class="language-javascript">makeAdder(x) = {
+  return (y) => x + y
+}
+
+add5 = makeAdder(5)
+add5(10) // 15</code></pre>
+  </section>
+
+  <!-- 7 -->
+  <section class="section" id="s7">
+    <h2>7. Условные выражения</h2>
+    <p>Роль <code>if/else</code> выполняет тернарный оператор:</p>
+    <pre><code class="language-javascript">условие ? выражение_если_true : выражение_если_false</code></pre>
+    <pre><code class="language-javascript">x = 10
+result = (x > 5) ? 100 : 200 // 100</code></pre>
+    <p>Ветви могут содержать любые выражения, в том числе блоки <code>{ ... }</code>.</p>
+  </section>
+
+  <!-- 8 -->
+  <section class="section" id="s8">
+    <h2>8. Обработка ошибок</h2>
+    <p>
+      Оператор <code>!</code> останавливает программу с ошибкой времени выполнения,
+      передавая вычисленное значение как полезную нагрузку:
+    </p>
+    <pre><code class="language-javascript">! "Что-то пошло не так"
+! 404</code></pre>
+    <div class="callout">
+      Оператор <code>!</code> часто используется внутри тернарного оператора для
+      валидации аргументов функции перед вычислением.
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="section" id="s9">
+    <h2>9. Массивы и встроенные операции</h2>
+    <p>Массив объявляется через перечисление элементов в <code>[...]</code>. Доступен широкий набор встроенных функций:</p>
+    <pre><code class="language-javascript">lst = [1, 2, 3, 4, 5]
+
+// Получение свойств
+len  = length(lst)       // 5
+fst  = head(lst)         // 1
+rst  = tail(lst)         // [2, 3, 4, 5]
+el   = get(lst, 0)       // 1
+
+// Создание новых списков
+lst  = append(lst, 6)    // [1, 2, 3, 4, 5, 6]
+lst  = remove(lst, 2)    // удаляет элемент с индексом 2
+part = slice(lst, 1, 3)  // срез от 1 до 3
+
+// Проверки
+ok = contains(lst, 10)   // false</code></pre>
+  </section>
+
+  <!-- 10 -->
+  <section class="section" id="s10">
+    <h2>10. Цикл и диапазоны</h2>
+    <p>RealV реализует цикл с неявным счётчиком через конструкцию <code>ArrowLoop</code>:</p>
+    <pre><code class="language-javascript">старт -> конец -> (индекс) => тело_цикла</code></pre>
+    <p>Каждое тело итерации — это лямбда, что сохраняет функциональный стиль:</p>
+    <pre><code class="language-javascript">factorial(n) = {
+  result = 1
+  1 -> n -> (i) => result = result * i
+  return result
+}</code></pre>
+  </section>
+
+  <!-- 11 -->
+  <section class="section" id="s11">
+    <h2>11. Ленивые вычисления</h2>
+    <p>
+      RealV поддерживает отложенные вычисления через <code>delay</code> (создание thunk'а)
+      и <code>force</code> (форсированное вычисление). Результат мемоизируется — повторный
+      вызов <code>force</code> возвращает кэшированное значение.
+    </p>
+    <pre><code class="language-javascript">// Не упадёт — ошибка заморожена
+t = delay(!123)
+
+lazyTask = delay({
+  return 42
+})
+
+val1 = force(lazyTask) // вычисляется (42)
+val2 = force(lazyTask) // берётся из кэша (42)</code></pre>
+    <div class="callout">
+      Вызов <code>force()</code> на уже вычисленном значении просто возвращает его без повторных вычислений.
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section class="section" id="s12">
+    <h2>12. Файловый ввод-вывод</h2>
+    <p>RealV имеет встроенные функции для работы с файловой системой:</p>
+    <pre><code class="language-javascript">path = "output.txt"
+
+writeFile(path, "Начало логирования\n")   // запись с заменой
+appendFile(path, "Новая запись\n")        // дозапись в конец
+
+content = readFile(path)                  // чтение всего файла</code></pre>
+  </section>
+
+  <!-- 13 -->
+  <section class="section" id="s13">
+    <h2>13. Запуск программ</h2>
+    <p>Программы RealV имеют расширение <code>.rv</code>. Запуск через .NET CLI из корня репозитория:</p>
+    <pre><code class="language-bash">dotnet run --project src/RealV.Cli/RealV.Cli.fsproj -- путь/к/скрипту.rv</code></pre>
+    <p>Пример запуска файла из директории <code>examples/</code>:</p>
+    <pre><code class="language-bash">dotnet run --project src/RealV.Cli/RealV.Cli.fsproj -- examples/factorial.rv</code></pre>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>RealV — курсовой проект по функциональному программированию · М8О-203БВ-24</p>
+</footer>
+
+</body>
+</html>
