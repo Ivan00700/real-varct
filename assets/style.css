@@ -414,6 +414,103 @@ tr:hover td { background: rgba(255, 255, 255, 0.02); }
   line-height: 1.7;
 }
 
+/* ─── Pipeline visual (implementation.html) ─── */
+.pipeline-visual {
+  display: flex;
+  align-items: stretch;
+  margin: 28px 0 32px;
+  overflow-x: auto;
+  gap: 0;
+}
+
+.pipeline-node {
+  flex: 1;
+  min-width: 100px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pipeline-node.pn-source { border-top-color: var(--muted); }
+.pipeline-node.pn-lexer  { border-top-color: var(--accent); }
+.pipeline-node.pn-parser { border-top-color: #7c4dff; }
+.pipeline-node.pn-eval   { border-top-color: #2ec27e; }
+.pipeline-node.pn-output { border-top-color: #e09a5a; }
+
+.pn-file {
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.71rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.pn-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #dde8ff;
+}
+
+.pn-desc {
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+.pipeline-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  color: var(--muted);
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+/* ─── Impl card (grouped code/content, implementation.html) ─── */
+.impl-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 16px 0;
+}
+
+.impl-card-label {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 16px;
+  font-size: 0.71rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--muted);
+}
+
+.impl-card > pre {
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.impl-card > ul {
+  margin: 0;
+  padding: 14px 20px 14px 40px;
+}
+
+.impl-card > ul li { margin-bottom: 6px; }
+.impl-card > ul li:last-child { margin-bottom: 0; }
+
+@media (max-width: 700px) {
+  .pipeline-visual { flex-direction: column; }
+  .pipeline-arrow { padding: 6px 0; }
+}
+
 /* ─── Side-by-side comparison (examples.html) ─── */
 .compare-block { margin-bottom: 48px; }
 
@@ -1006,4 +1103,90 @@ a.feature-item:hover .feature-item-hint { color: var(--accent); }
 .tech-item span {
   font-size: 0.78rem;
   color: var(--muted);
+}
+
+/* ─── Project file tree (implementation.html) ─── */
+.project-tree {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.83rem;
+  line-height: 1.9;
+  color: var(--muted);
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  white-space: pre;
+}
+
+.pt-dir     { color: var(--accent2); font-weight: 600; }
+.pt-file    { color: var(--text); }
+.pt-comment { color: var(--muted); font-style: italic; opacity: 0.75; }
+.pt-sep     { display: block; height: 8px; }
+
+/* ─── Architecture layer grid (implementation.html) ─── */
+.layer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.layer-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.layer-card.lc-core    { border-top-color: #e09a5a; }
+.layer-card.lc-parser  { border-top-color: var(--accent); }
+.layer-card.lc-runtime { border-top-color: #2ec27e; }
+.layer-card.lc-cli     { border-top-color: #7c4dff; }
+
+.layer-card-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.layer-card.lc-core    .layer-card-title { color: #e09a5a; }
+.layer-card.lc-parser  .layer-card-title { color: var(--accent); }
+.layer-card.lc-runtime .layer-card-title { color: #2ec27e; }
+.layer-card.lc-cli     .layer-card-title { color: #b58aff; }
+
+.layer-files {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.layer-files li {
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.79rem;
+  color: var(--accent2);
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  margin: 0;
+  background: var(--code-bg);
+}
+
+.layer-files li:last-child { border-bottom: none; }
+
+.layer-desc {
+  font-size: 0.83rem;
+  color: var(--muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+@media (max-width: 680px) {
+  .layer-grid { grid-template-columns: 1fr; }
 }
