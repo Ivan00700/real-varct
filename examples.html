@@ -48,7 +48,26 @@
   <p class="lead">Компактные примеры кода — как функциональные абстракции выражаются в C-подобном синтаксисе</p>
 </div>
 
-<main class="container">
+<div class="doc-layout">
+
+  <aside class="doc-sidebar">
+    <nav class="toc">
+      <p class="toc-label">Содержание</p>
+      <ol>
+        <li><a href="#ex-ternary">Тернарный оператор</a></li>
+        <li><a href="#ex-recursion">Факториал и рекурсия</a></li>
+        <li><a href="#ex-loop">Цикл (ArrowLoop)</a></li>
+        <li><a href="#ex-closures">Лямбды и замыкания</a></li>
+        <li><a href="#ex-arrays">Массивы и списки</a></li>
+        <li><a href="#ex-lazy">Ленивые вычисления</a></li>
+        <li><a href="#ex-errors">Выброс исключений</a></li>
+        <li><a href="#ex-io">Файловый I/O</a></li>
+        <li><a href="#ex-table">Сводная таблица</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main class="doc-content">
 
   <div class="callout">
     Все примеры находятся в директории <code>examples/</code> репозитория и запускаются через CLI:
@@ -280,7 +299,7 @@ let text = File.ReadAllText(path)</code></pre>
 
   <hr class="divider">
 
-  <section class="section">
+  <section class="section" id="ex-table">
     <h2>Сводная таблица конструкций</h2>
     <table>
       <thead>
@@ -300,7 +319,9 @@ let text = File.ReadAllText(path)</code></pre>
     </table>
   </section>
 
-</main>
+  </main>
+
+</div>
 
 <footer class="footer">
   <p>RealV — курсовой проект по функциональному программированию · М8О-203БВ-24</p>

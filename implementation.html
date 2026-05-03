@@ -34,7 +34,27 @@
   <p class="lead">Как устроен интерпретатор RealV изнутри: лексер, парсер, AST, вычислитель и система ленивых вычислений</p>
 </div>
 
-<main class="container">
+<div class="doc-layout">
+
+  <aside class="doc-sidebar">
+    <nav class="toc">
+      <p class="toc-label">Содержание</p>
+      <ol>
+        <li><a href="#impl-pipeline">Общая схема</a></li>
+        <li><a href="#impl-ast">AST — Ast.fs</a></li>
+        <li><a href="#impl-lexer">Лексер и парсер</a></li>
+        <li><a href="#impl-eval">Вычислитель</a></li>
+        <li><a href="#impl-env">Окружение (Env)</a></li>
+        <li><a href="#impl-closures">Функции и замыкания</a></li>
+        <li><a href="#impl-thunks">Ленивые вычисления</a></li>
+        <li><a href="#impl-loop">Циклы (ArrowLoop)</a></li>
+        <li><a href="#impl-entry">Сборка и запуск</a></li>
+        <li><a href="#impl-structure">Структура проекта</a></li>
+      </ol>
+    </nav>
+  </aside>
+
+  <main class="doc-content">
 
   <p class="lead">
     RealV реализован в виде кастомного интерпретатора на <strong>F#</strong> (.NET 8). Архитектура классическая
@@ -42,7 +62,7 @@
     методом рекурсивного спуска. Это даёт полный контроль над синтаксисом и сообщениями об ошибках.
   </p>
 
-  <section class="section">
+  <section class="section" id="impl-pipeline">
     <h2>Общая схема работы</h2>
     <div class="pipeline">┌──────────────┐    ┌─────────────┐    ┌────────────────────┐    ┌──────────────────┐
 │ Исходный код │ →  │  Lexer.fs   │ →  │ Parser.Expr.fs     │ →  │     Eval.fs      │
@@ -63,7 +83,7 @@
     </ol>
   </section>
 
-  <section class="section">
+  <section class="section" id="impl-ast">
     <h2>AST — модуль Ast.fs</h2>
     <p>
       Грамматика языка описана в виде алгебраического типа данных (Discriminated Union) <code>Expr</code>.
@@ -91,7 +111,7 @@
 | Force     of Expr           // ленивое вычисление (force)</code></pre>
   </section>
 
-  <section class="section">
+  <section class="section" id="impl-lexer">
     <h2>Лексер и парсер</h2>
     <p>
       В отличие от инструментов вроде FParsec, RealV использует <strong>ручной посимвольный лексер</strong>
@@ -112,7 +132,7 @@
     </ul>
   </section>
 
-  <section class="section">
+  <section class="section" id="impl-eval">
     <h2>Вычислитель — Eval.fs</h2>
     <p>
       <code>Eval.fs</code> рекурсивно обходит AST, преобразуя <code>Expr</code> в <code>Value</code>.
@@ -133,7 +153,7 @@
     </p>
   </section>
 
-  <section class="section">
+  <section class="section" id="impl-env">
     <h2>Окружение и мутабельность (Env)</h2>
     <p>
       Окружение исполнения (<code>Env</code>) реализовано поверх изменяемого .NET словаря
@@ -152,7 +172,7 @@
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" id="impl-closures">
     <h2>Функции, замыкания и рекурсия</h2>
     <p>
       Именованные функции и рекурсия разворачиваются во время парсинга в абстракцию
@@ -165,7 +185,7 @@
     </p>
   </section>
 
-  <section class="section">
+  <section class="section" id="impl-thunks">
     <h2>Ленивые вычисления (Thunks)</h2>
     <p>Отложенные вычисления с кэшированием управляются типом <code>Thunk</code>:</p>
     <pre><code class="language-fsharp">and Thunk = { mutable Cell: Value option; Compute: unit -> Value }</code></pre>
@@ -178,7 +198,7 @@
 force(x)         // разворачивается и падает с ошибкой</code></pre>
   </section>
 
-  <section class="section">
+  <section class="section" id="impl-loop">
     <h2>Циклы и диапазоны (ArrowLoop)</h2>
     <p>
       Конструкция <code>val1 -&gt; val2 -&gt; (i) =&gt; body</code> под капотом вычисляет
@@ -188,7 +208,7 @@ force(x)         // разворачивается и падает с ошибк
     </p>
   </section>
 
-  <section class="section">
+  <section class="section" id="impl-entry">
     <h2>Сборка и точка входа</h2>
     <p>Проект организован в две папки исходного кода: библиотека <code>RealV</code> и CLI <code>RealV.Cli</code>.</p>
     <p>Файл проекта <code>src/RealV.Cli/RealV.Cli.fsproj</code> подключает ядро по порядку зависимостей:</p>
@@ -209,7 +229,7 @@ force(x)         // разворачивается и падает с ошибк
     </p>
   </section>
 
-  <section class="section">
+  <section class="section" id="impl-structure">
     <h2>Структура проекта</h2>
     <table>
       <thead>
@@ -226,7 +246,9 @@ force(x)         // разворачивается и падает с ошибк
     </table>
   </section>
 
-</main>
+  </main>
+
+</div>
 
 <footer class="footer">
   <p>RealV — курсовой проект по функциональному программированию · М8О-203БВ-24</p>
