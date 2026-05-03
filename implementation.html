@@ -216,14 +216,24 @@
   <section class="section" id="impl-closures">
     <h2>Функции, замыкания и рекурсия</h2>
     <p>
-      Именованные функции и рекурсия разворачиваются во время парсинга в абстракцию
+      Именованные функции разворачиваются во время парсинга в узел
       <code>LetRec(name, arg, body, ...)</code>. В <code>Eval</code> имя связывается
-      с фиктивным замыканием до вычисления тела, что решает проблему самоссылки.
+      с фиктивным замыканием до вычисления тела — это решает проблему самоссылки
+      при рекурсии без дополнительных ключевых слов.
     </p>
     <p>
       <code>VClosure(argName, bodyExpr, env)</code> «запоминает» ссылку на тот <code>Env</code>,
       в котором функция была создана — это обеспечивает полноценную работу <strong>лексических замыканий</strong>.
     </p>
+    <div class="impl-card">
+      <div class="impl-card-label">Пример: замыкание захватывает переменную из внешнего окружения</div>
+      <pre><code class="language-javascript">makeAdder(x) = {
+  return (y) => x + y  // лямбда захватывает x из Env makeAdder
+}
+
+add10 = makeAdder(10)  // создаётся VClosure("y", x+y, Env{x=10})
+add10(3)               // → 13  (x берётся из замкнутого Env)</code></pre>
+    </div>
   </section>
 
   <section class="section" id="impl-thunks">
@@ -247,16 +257,29 @@ force(x)         // разворачивается и падает с ошибк
     <p>
       Конструкция <code>val1 -&gt; val2 -&gt; (i) =&gt; body</code> под капотом вычисляет
       стартовое и конечное значения, затем в цикле <code>while</code> вызывает правую лямбду,
-      передавая текущий индекс. Это позволяет писать короткие и понятные итераторы
+      передавая текущий индекс. Диапазон включает обе границы — <code>1 -&gt; 5</code> итерирует
+      <code>i = 1, 2, 3, 4, 5</code>. Это позволяет писать короткие итераторы
       без явной рекурсии — идеально вписывается в C-подобный синтаксис поверх ФП-ядра.
     </p>
+    <div class="impl-card">
+      <div class="impl-card-label">Пример: сумма чисел от 1 до n через ArrowLoop</div>
+      <pre><code class="language-javascript">sumTo(n) = {
+  result = 0
+  1 -> n -> (i) => result = result + i
+  return result
+}
+
+sumTo(10) // 55</code></pre>
+    </div>
   </section>
 
   <section class="section" id="impl-entry">
     <h2>Сборка и точка входа</h2>
     <p>Проект организован в две папки исходного кода: библиотека <code>RealV</code> и CLI <code>RealV.Cli</code>.</p>
-    <p>Файл проекта <code>src/RealV.Cli/RealV.Cli.fsproj</code> подключает ядро по порядку зависимостей:</p>
-    <pre><code class="language-xml">&lt;ItemGroup&gt;
+    <p>Файл проекта <code>src/RealV.Cli/RealV.Cli.fsproj</code> подключает ядро по порядку зависимостей — важен именно этот порядок, так как F# компилирует файлы последовательно:</p>
+    <div class="impl-card">
+      <div class="impl-card-label">src/RealV.Cli/RealV.Cli.fsproj — порядок компиляции</div>
+      <pre><code class="language-xml">&lt;ItemGroup&gt;
   &lt;Compile Include="..\RealV\Core\Ast.fs" /&gt;
   &lt;Compile Include="..\RealV\Core\Tokens.fs" /&gt;
   &lt;Compile Include="..\RealV\Parser\Lexer.fs" /&gt;
@@ -264,7 +287,8 @@ force(x)         // разворачивается и падает с ошибк
   &lt;Compile Include="..\RealV\Runtime\Eval.fs" /&gt;
   &lt;Compile Include="Program.fs" /&gt;
 &lt;/ItemGroup&gt;</code></pre>
-    <p>Запуск:</p>
+    </div>
+    <p>Запуск примера:</p>
     <pre><code class="language-bash">dotnet run --project src/RealV.Cli/RealV.Cli.fsproj -- examples/factorial.rv</code></pre>
     <p>
       При старте инициализируется глобальное окружение со встроенными <code>VPrim</code>-функциями:

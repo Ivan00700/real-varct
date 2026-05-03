@@ -60,7 +60,7 @@
   <main class="doc-content">
 
     <p class="lead">
-      RealV — функциональный язык с читаемым brace-based синтаксисом, напоминающим C и JavaScript.
+      RealV — функциональный язык с читаемым синтаксисом на основе фигурных скобок, вдохновлённым C и JavaScript.
       Под капотом он использует AST на основе лямбда-исчисления, поддерживает рекурсию, замыкания,
       ленивые вычисления и встроенный файловый I/O. Файлы программ имеют расширение <code>.rv</code>.
     </p>
@@ -132,6 +132,10 @@ x = 5 // переменная x равна 5</code></pre>
 
 factorial(5) // 120</code></pre>
       <p>Вызов функции использует круглые скобки: <code>factorial(5)</code> или <code>factorial (5)</code>.</p>
+      <div class="callout">
+        Все функции принимают один аргумент. Для нескольких аргументов используется каррирование —
+        вложенные лямбды: <code>add(x) = (y) =&gt; x + y</code>. Вызов: <code>add(3)(4)</code> → <code>7</code>.
+      </div>
     </section>
 
     <!-- 6 -->
@@ -200,7 +204,7 @@ ok = contains(lst, 10)   // false</code></pre>
       <h2>10. Цикл и диапазоны</h2>
       <p>RealV реализует цикл с неявным счётчиком через конструкцию <code>ArrowLoop</code>:</p>
       <pre><code class="language-javascript">старт -> конец -> (индекс) => тело_цикла</code></pre>
-      <p>Каждое тело итерации — это лямбда, что сохраняет функциональный стиль:</p>
+      <p>Диапазон включает обе границы: <code>1 -&gt; 5</code> итерирует <code>i = 1, 2, 3, 4, 5</code>. Каждое тело — лямбда, что сохраняет функциональный стиль:</p>
       <pre><code class="language-javascript">factorial(n) = {
   result = 1
   1 -> n -> (i) => result = result * i
@@ -216,15 +220,11 @@ ok = contains(lst, 10)   // false</code></pre>
         и <code>force</code> (форсированное вычисление). Результат мемоизируется — повторный
         вызов <code>force</code> возвращает кэшированное значение.
       </p>
-      <pre><code class="language-javascript">// Не упадёт — ошибка заморожена
-t = delay(!123)
+      <pre><code class="language-javascript">t = delay(!123)         // не упадёт — ошибка заморожена (t намеренно не форсируется)
 
-lazyTask = delay({
-  return 42
-})
-
-val1 = force(lazyTask) // вычисляется (42)
-val2 = force(lazyTask) // берётся из кэша (42)</code></pre>
+lazyTask = delay(40 + 2)
+val1 = force(lazyTask)  // вычисляется (42)
+val2 = force(lazyTask)  // берётся из кэша (42)</code></pre>
       <div class="callout">
         Вызов <code>force()</code> на уже вычисленном значении просто возвращает его без повторных вычислений.
       </div>
@@ -246,6 +246,9 @@ content = readFile(path)                  // чтение всего файла<
     <section class="section" id="s13">
       <h2>13. Запуск программ</h2>
       <p>Программы RealV имеют расширение <code>.rv</code>. Запуск через .NET CLI из корня репозитория:</p>
+      <div class="callout">
+        Требуется установленный <strong>.NET 8 SDK</strong>. Проверить: <code>dotnet --version</code> должна вернуть <code>8.x</code> или выше.
+      </div>
       <pre><code class="language-bash">dotnet run --project src/RealV.Cli/RealV.Cli.fsproj -- путь/к/скрипту.rv</code></pre>
       <p>Пример запуска файла из директории <code>examples/</code>:</p>
       <pre><code class="language-bash">dotnet run --project src/RealV.Cli/RealV.Cli.fsproj -- examples/factorial.rv</code></pre>

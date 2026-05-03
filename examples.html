@@ -172,7 +172,7 @@ add5 10 // 15</code></pre>
   <!-- 5 -->
   <div class="compare-block" id="ex-arrays">
     <h2>5. Массивы и списки</h2>
-    <p>Массивы объявляются через <code>[...]</code>. Встроенное окружение предоставляет методы для их обработки в Lisp-стиле (голова / хвост) и функционального преобразования.</p>
+    <p>Массивы объявляются через <code>[...]</code>. Встроенное окружение предоставляет методы для их обработки в Lisp-стиле (голова / хвост) и функционального преобразования. Идентификаторы могут быть на кириллице — RealV поддерживает Unicode в именах переменных.</p>
     <div class="compare-cols">
       <div class="code-panel rv">
         <div class="code-panel-header">RealV</div>
@@ -207,12 +207,11 @@ let tail = List.tail lst2</code></pre>
       <div class="code-panel rv">
         <div class="code-panel-header">RealV</div>
         <pre><code class="language-javascript">{
-  // Не упадёт — выражение заморожено
-  t = delay(100 / 0)
+  t = delay(100 / 0)      // не упадёт — выражение заморожено
 
   lazyTask = delay(40 + 2)
-  val1 = force(lazyTask) // вычисляется (42)
-  val2 = force(lazyTask) // из кэша (42)
+  val1 = force(lazyTask)  // вычисляется (42)
+  val2 = force(lazyTask)  // из кэша (42)
 
   return val1
 }</code></pre>

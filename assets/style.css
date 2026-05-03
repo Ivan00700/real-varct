@@ -940,10 +940,11 @@ a.feature-item:hover .feature-item-hint { color: var(--accent); }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--muted);
-  margin: 56px 0 32px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--border);
+  color: var(--accent);
+  margin: 56px 0 28px;
+  padding: 0 0 10px 14px;
+  border-bottom: 1px solid var(--border);
+  border-left: 3px solid var(--accent-dim);
 }
 
 /* ─── Responsive additions ─── */
