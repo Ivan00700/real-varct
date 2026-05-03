@@ -8,20 +8,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js" defer></script>
   <script>document.addEventListener('DOMContentLoaded', () => hljs.highlightAll());</script>
-  <style>
-    .lang-tag {
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 4px;
-      margin-bottom: 6px;
-    }
-    .lang-tag.rv  { background: rgba(74,158,255,0.15); color: var(--accent); border: 1px solid var(--accent-dim); }
-    .lang-tag.fsh { background: rgba(160,100,255,0.12); color: #b58aff; border: 1px solid rgba(130,70,220,0.4); }
-  </style>
 </head>
 <body>
 
@@ -81,16 +67,16 @@
     <h2>1. Тернарный оператор</h2>
     <p>В RealV нет громоздкого <code>if/then/else</code>. Его заменяет компактный тернарный оператор <code>?:</code>, который напрямую разворачивается в AST-узел <code>If</code>.</p>
     <div class="compare-cols">
-      <div>
-        <span class="lang-tag rv">RealV</span>
+      <div class="code-panel rv">
+        <div class="code-panel-header">RealV</div>
         <pre><code class="language-javascript">{
   x = 10
   result = (x > 5) ? 100 : 200
   return result
 }</code></pre>
       </div>
-      <div>
-        <span class="lang-tag fsh">F#</span>
+      <div class="code-panel fsh">
+        <div class="code-panel-header">F#</div>
         <pre><code class="language-fsharp">let x = 10
 let result =
     if x > 5 then 100 else 200</code></pre>
@@ -105,16 +91,16 @@ let result =
     <h2>2. Факториал и рекурсия</h2>
     <p>Классическая рекурсия поддерживается из коробки — любая объявленная функция видит саму себя внутри тела без дополнительных ключевых слов.</p>
     <div class="compare-cols">
-      <div>
-        <span class="lang-tag rv">RealV</span>
+      <div class="code-panel rv">
+        <div class="code-panel-header">RealV</div>
         <pre><code class="language-javascript">factorial(n) = {
   n == 0 ? return 1 : return n * factorial(n - 1)
 }
 
 factorial(5) // 120</code></pre>
       </div>
-      <div>
-        <span class="lang-tag fsh">F#</span>
+      <div class="code-panel fsh">
+        <div class="code-panel-header">F#</div>
         <pre><code class="language-fsharp">let rec factorial n =
     if n = 0 then 1
     else n * factorial (n - 1)
@@ -131,8 +117,8 @@ factorial 5</code></pre>
     <h2>3. Цикл через диапазоны (ArrowLoop)</h2>
     <p>Конструкция <code>start -&gt; end -&gt; (i) =&gt; body</code> реализует итерационный цикл. Тело — лямбда, что сохраняет функциональный стиль без потери читаемости.</p>
     <div class="compare-cols">
-      <div>
-        <span class="lang-tag rv">RealV</span>
+      <div class="code-panel rv">
+        <div class="code-panel-header">RealV</div>
         <pre><code class="language-javascript">factorial(n) = {
   result = 1
   1 -> n -> (i) => result = result * i
@@ -141,8 +127,8 @@ factorial 5</code></pre>
 
 factorial(6) // 720</code></pre>
       </div>
-      <div>
-        <span class="lang-tag fsh">F#</span>
+      <div class="code-panel fsh">
+        <div class="code-panel-header">F#</div>
         <pre><code class="language-fsharp">let factorial n =
     let mutable result = 1
     for i in 1..n do
@@ -159,8 +145,8 @@ factorial(6) // 720</code></pre>
     <h2>4. Лямбда-функции и замыкания</h2>
     <p>Функции первого класса: можно создавать анонимные функции и возвращать их как значения. Они запомнят своё лексическое окружение.</p>
     <div class="compare-cols">
-      <div>
-        <span class="lang-tag rv">RealV</span>
+      <div class="code-panel rv">
+        <div class="code-panel-header">RealV</div>
         <pre><code class="language-javascript">makeAdder(x) = {
   return (y) => x + y
 }
@@ -170,8 +156,8 @@ factorial(6) // 720</code></pre>
   return add5(10) // 15
 }</code></pre>
       </div>
-      <div>
-        <span class="lang-tag fsh">F#</span>
+      <div class="code-panel fsh">
+        <div class="code-panel-header">F#</div>
         <pre><code class="language-fsharp">let makeAdder x =
     fun y -> x + y
 
@@ -188,8 +174,8 @@ add5 10 // 15</code></pre>
     <h2>5. Массивы и списки</h2>
     <p>Массивы объявляются через <code>[...]</code>. Встроенное окружение предоставляет методы для их обработки в Lisp-стиле (голова / хвост) и функционального преобразования.</p>
     <div class="compare-cols">
-      <div>
-        <span class="lang-tag rv">RealV</span>
+      <div class="code-panel rv">
+        <div class="code-panel-header">RealV</div>
         <pre><code class="language-javascript">{
   lst = [1, 2, 3]
   lst = append(lst, 4)   // [1, 2, 3, 4]
@@ -200,8 +186,8 @@ add5 10 // 15</code></pre>
   return (первый == 1) ? true : false
 }</code></pre>
       </div>
-      <div>
-        <span class="lang-tag fsh">F#</span>
+      <div class="code-panel fsh">
+        <div class="code-panel-header">F#</div>
         <pre><code class="language-fsharp">let lst = [1; 2; 3]
 let lst2 = lst @ [4]
 
@@ -216,13 +202,10 @@ let tail = List.tail lst2</code></pre>
   <!-- 6 -->
   <div class="compare-block" id="ex-lazy">
     <h2>6. Ленивые вычисления (Delay / Force)</h2>
-    <p>
-      <code>delay</code> замораживает выражение в <code>Thunk</code>, не вычисляя его.
-      <code>force</code> раскрывает thunk и кэширует результат — повторный вызов мгновенен.
-    </p>
+    <p><code>delay</code> замораживает выражение в <code>Thunk</code>, не вычисляя его. <code>force</code> раскрывает thunk и кэширует результат — повторный вызов мгновенен.</p>
     <div class="compare-cols">
-      <div>
-        <span class="lang-tag rv">RealV</span>
+      <div class="code-panel rv">
+        <div class="code-panel-header">RealV</div>
         <pre><code class="language-javascript">{
   // Не упадёт — выражение заморожено
   t = delay(100 / 0)
@@ -234,8 +217,8 @@ let tail = List.tail lst2</code></pre>
   return val1
 }</code></pre>
       </div>
-      <div>
-        <span class="lang-tag fsh">F#</span>
+      <div class="code-panel fsh">
+        <div class="code-panel-header">F#</div>
         <pre><code class="language-fsharp">let t = lazy(100 / 0)
 
 let lazyTask = lazy(40 + 2)
@@ -252,16 +235,16 @@ let val2 = lazyTask.Force() // из кэша</code></pre>
     <h2>7. Выброс исключений (Raise)</h2>
     <p>Оператор <code>!</code> прерывает выполнение с пользовательской ошибкой. Формально превращается в AST-узел <code>Raise</code>.</p>
     <div class="compare-cols">
-      <div>
-        <span class="lang-tag rv">RealV</span>
+      <div class="code-panel rv">
+        <div class="code-panel-header">RealV</div>
         <pre><code class="language-javascript">{
   ошибка = "Что-то пошло не так"
   ! ошибка
   // LangError("Что-то пошло не так")
 }</code></pre>
       </div>
-      <div>
-        <span class="lang-tag fsh">F#</span>
+      <div class="code-panel fsh">
+        <div class="code-panel-header">F#</div>
         <pre><code class="language-fsharp">let ошибка = "Что-то пошло не так"
 failwith ошибка</code></pre>
       </div>
@@ -275,8 +258,8 @@ failwith ошибка</code></pre>
     <h2>8. Файловый ввод-вывод</h2>
     <p>Встроенные функции <code>readFile</code>, <code>writeFile</code>, <code>appendFile</code> позволяют работать с файловой системой напрямую из кода на RealV.</p>
     <div class="compare-cols">
-      <div>
-        <span class="lang-tag rv">RealV</span>
+      <div class="code-panel rv">
+        <div class="code-panel-header">RealV</div>
         <pre><code class="language-javascript">{
   path = "output.txt"
   writeFile(path, "Строка 1\n")
@@ -286,8 +269,8 @@ failwith ошибка</code></pre>
   return text
 }</code></pre>
       </div>
-      <div>
-        <span class="lang-tag fsh">F#</span>
+      <div class="code-panel fsh">
+        <div class="code-panel-header">F#</div>
         <pre><code class="language-fsharp">let path = "output.txt"
 File.WriteAllText(path, "Строка 1\n")
 File.AppendAllText(path, "Строка 2\n")
