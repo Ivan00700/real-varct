@@ -15,17 +15,10 @@
   <div class="header-inner">
     <a href="index.html" class="logo-link">
       <div class="logo-img-wrap">
-        <img src="photo_2026-05-03_13-50-16.jpg" alt="RealV" class="logo-img">
+        <img src="logo_rv.jpg" alt="RealV" class="logo-img">
       </div>
       <span class="logo-text">RealV</span>
     </a>
-    <nav class="nav">
-      <a href="index.html">Главная</a>
-      <a href="documentation.html">Справочник</a>
-      <a href="examples.html">Примеры</a>
-      <a href="implementation.html">Устройство</a>
-      <a href="extension.html" class="active">Расширение</a>
-    </nav>
   </div>
 </header>
 
@@ -34,7 +27,21 @@
   <p class="lead">Подсветка синтаксиса, автодополнение скобок и быстрый запуск <code>.rv</code> программ прямо из редактора</p>
 </div>
 
-<main class="container">
+<div class="doc-layout">
+
+<aside class="doc-sidebar">
+  <span class="sidebar-nav-label">Разделы</span>
+  <nav class="sidebar-section-nav">
+    <a href="index.html">Главная</a>
+    <a href="documentation.html">Справочник</a>
+    <a href="examples.html">Примеры</a>
+    <a href="implementation.html">Устройство</a>
+    <a href="extension.html" class="active">Расширение</a>
+  </nav>
+</aside>
+
+<div class="doc-content">
+<main>
 
   <p class="lead">
     Расширение создано для того, чтобы сделать процесс написания кода на RealV максимально комфортным.
@@ -198,6 +205,8 @@ vsce package</code></pre>
   </section>
 
 </main>
+</div><!-- /.doc-content -->
+</div><!-- /.doc-layout -->
 
 <footer class="footer">
   <p>RealV — курсовой проект по функциональному программированию · М8О-203БВ-24</p>
